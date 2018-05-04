@@ -29,4 +29,11 @@ function mapStateToProps(state) {
     };
 }
 
+// This function will load data based on the set of components shown
+// The goal is to load data without actually having to render it
+function loadData(store) {
+    return store.dispatch(fetchUsers());
+}
+
+export { loadData };
 export default connect(mapStateToProps, { fetchUsers })(UsersList);
