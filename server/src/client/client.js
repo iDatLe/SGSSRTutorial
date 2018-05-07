@@ -13,7 +13,7 @@ import reducers from './reducers';
 
 const store = createStore(
     reducers, 
-    {}, 
+    window.INITIAL_STATE, 
     applyMiddleware(thunk)
 );
 
@@ -25,3 +25,4 @@ ReactDOM.hydrate(
     </Provider>,
     document.querySelector('#root')
 ); // The second argument is where we want to render our Home app into
+// renderRoutes is used so that matchRoutes outside of render and inside results in the same branch
