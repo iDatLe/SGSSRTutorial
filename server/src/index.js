@@ -26,12 +26,29 @@ app.get('*', (req, res) => { // The 'req' contains the url the user is trying to
 
     const promises = matchRoutes(Routes, req.path).map(({ route }) => {
         return route.loadData ? route.loadData(store) : null;
+    }).map(promise => {
+        if (promise) {
+            return new Promise((resolve, reject) => {
+                promise.then(resolve).catch(resolve);
+            });
+        }
     });
 
     // Passes in the array of promises above
-    Promise.all(promises).then(() => {
+    Promise.all(promises).then(() => { // when ALL of the promises are resolved, the .then function executes
+
+        const context = {};
+        const content = renderer(req, store, context)
+
+        if (context.url) {
+            return res.redirect(301, context.url)
+        }
+        if (context.notFound) {
+            res.status(404);
+        }
+
         // When we get here, all of our data loading requests must be completed
-        res.send(renderer(req, store));
+        res.send(content);
     });
 });
 
